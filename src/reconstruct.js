@@ -39,6 +39,12 @@ Your job:
   "noise_filtered_count": 0
 }`;
 
+const { parseTimeRangeToMinutes } = require("./timeUtils");
+
+function rangesOverlap(a, b) {
+  return a.startMin < b.endMin && b.startMin < a.endMin;
+}
+
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -140,6 +146,18 @@ async function reconstructDay(evidenceItems) {
     ...block,
     evidence_ids: (block.evidence_ids || []).filter((id) => validIds.has(id)),
   }));
+
+  // Defensive fix: never trust the model's gap list blindly — drop any
+  // "unaccounted_time" window that actually overlaps a real activity block.
+  const activityRanges = parsed.activity_blocks
+    .map((b) => parseTimeRangeToMinutes(b.time_range))
+    .filter(Boolean);
+
+  parsed.unaccounted_time = (parsed.unaccounted_time || []).filter((gap) => {
+    const gapRange = parseTimeRangeToMinutes(gap.time_range);
+    if (!gapRange) return true; // can't parse "All Day" etc., leave as-is
+    return !activityRanges.some((actRange) => rangesOverlap(gapRange, actRange));
+  });
 
   return parsed;
 }

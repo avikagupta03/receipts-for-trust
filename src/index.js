@@ -46,7 +46,7 @@ async function main() {
   });
 
   if (evidenceItems.length === 0) {
-    console.log("No evidence found for this day. Nothing to reconstruct.");
+    console.log("No calendar events or emails found for this day — nothing to reconstruct. Skipping report generation.");
     return;
   }
 
