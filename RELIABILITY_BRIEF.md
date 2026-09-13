@@ -3,7 +3,8 @@
 ## What it does
 
 Receipts for Trust reconstructs a factual, evidence-cited account of a person's day by reading their **Google Calendar** and **Gmail**, filtering out promotional/automated noise, clustering related evidence into real activities, and honestly flagging any time it cannot account for. Output is delivered as a clean HTML report and a Google Doc verification record — useful for freelancer timesheets, personal accountability, or reconstructing "what did I actually do this week."
-
+![Real day reconstruction](report.png)
+![Pipeline running end-to-end](terminal-run.png)
 **Apps connected:** Google Calendar (read), Gmail (read), Google Docs (write) — 3 external apps, one unified OAuth flow.
 
 ## Architecture
